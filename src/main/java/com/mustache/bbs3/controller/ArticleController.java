@@ -31,7 +31,7 @@ public class ArticleController {
 
     @GetMapping("")
     public String index() {
-        return "";
+        return "redirect:/articles/list";
     }
 
     @GetMapping("/new")
@@ -43,7 +43,9 @@ public class ArticleController {
     public String add(ArticleDto articleDto) {
         log.info(articleDto.getTitle());
         Article saveArticle = articleRepository.save(articleDto.toEntity());
-        return "";
+
+        String returnUrl = "redirect:/articles/id/" + saveArticle.getId();
+        return returnUrl;
     }
 
     @GetMapping("/id/{id}")
@@ -56,5 +58,11 @@ public class ArticleController {
 
         model.addAttribute("article", selectOne.get());
         return "id";
+    }
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "list";
     }
 }
